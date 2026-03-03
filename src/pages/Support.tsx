@@ -21,7 +21,7 @@ export const SupportPage: React.FC = () => {
         <Card className="bg-emerald-500 text-white border-none flex flex-col justify-between">
           <div>
             <Phone className="h-8 w-8 mb-4 opacity-80" />
-            <h3 className="text-xl font-bold">WhatsApp GigaNet</h3>
+            <h3 className="text-xl font-bold">WhatsApp VGWEB</h3>
             <p className="text-emerald-100 text-sm">Atendimento rápido via chat</p>
           </div>
           <Button variant="secondary" className="mt-6 w-full text-emerald-600">
