@@ -65,7 +65,7 @@ export const LoginPage: React.FC = () => {
     try {
       if (isRegistering) {
         const cred    = await createUserWithEmailAndPassword(auth, email, password);
-        const isAdmin = email === import.meta.env.VITE_ADMIN_EMAIL;
+        const isAdmin = email === 'vgwebadm@gmail.com';
         await setDoc(Doc.user(cred.user.uid), {
           uid: cred.user.uid, nome, email, cpf,
           tipo: isAdmin ? 'admin' : 'client',
@@ -129,7 +129,17 @@ export const LoginPage: React.FC = () => {
           `}</style>
         )}
 
-        <div className={loginBgUrl ? 'login-glass' : ''}>
+        {/* Campos mais escuros quando não há imagem de fundo */}
+        {!loginBgUrl && (
+          <style>{`
+            .login-default input               { background: #f1f5f9 !important; border-color: #cbd5e1 !important; color: #0f172a !important; }
+            .login-default input::placeholder  { color: #94a3b8 !important; }
+            .login-default input:focus         { background: #e8f0fe !important; border-color: #004aad !important; box-shadow: 0 0 0 3px rgba(0,74,173,0.10); }
+            .login-default label               { color: #374151 !important; }
+          `}</style>
+        )}
+
+        <div className={loginBgUrl ? 'login-glass' : 'login-default'}>
 
         {/* ═══ Logo ═══ */}
         <div className="flex flex-col items-center mb-6">
