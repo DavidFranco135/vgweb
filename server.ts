@@ -1,5 +1,5 @@
 /**
- * server.ts — GigaNet App
+ * server.ts —vgweb App
  * Rotas de API com integração real ao IXC Soft
  */
 
@@ -23,7 +23,7 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT) {
   const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
   admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 } else {
-  admin.initializeApp({ projectId: "giganet-1d32c" });
+  admin.initializeApp({ projectId: "vgweb-34eec" });
 }
 
 const db = admin.firestore();
