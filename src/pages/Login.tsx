@@ -65,7 +65,7 @@ export const LoginPage: React.FC = () => {
     try {
       if (isRegistering) {
         const cred    = await createUserWithEmailAndPassword(auth, email, password);
-        const isAdmin = email === 'vgwebadm@gmail.com';
+        const isAdmin = email === import.meta.env.VITE_ADMIN_EMAIL;
         await setDoc(Doc.user(cred.user.uid), {
           uid: cred.user.uid, nome, email, cpf,
           tipo: isAdmin ? 'admin' : 'client',
