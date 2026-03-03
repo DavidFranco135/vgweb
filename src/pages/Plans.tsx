@@ -31,7 +31,7 @@ export const PlansPage: React.FC = () => {
     <div className="space-y-8">
       <header className="text-center max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold text-slate-900">Nossos Planos</h1>
-        <p className="text-slate-500 mt-2">Escolha a velocidade ideal para sua casa ou empresa com a ultravelocidade da GigaNet.</p>
+        <p className="text-slate-500 mt-2">Escolha a velocidade ideal para sua casa ou empresa com a ultravelocidade da VGWEB.</p>
       </header>
 
       {loading ? (
