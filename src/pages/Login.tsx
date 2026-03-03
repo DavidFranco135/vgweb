@@ -64,7 +64,7 @@ export const LoginPage: React.FC = () => {
     try {
       if (isRegistering) {
         const cred    = await createUserWithEmailAndPassword(auth, email, password);
-        const isAdmin = email === 'giganetadm@gmail.com';
+        const isAdmin = email === 'vgwebadm@gmail.com';
         await setDoc(doc(db, 'users', cred.user.uid), {
           uid: cred.user.uid, nome, email, cpf,
           tipo: isAdmin ? 'admin' : 'client',
@@ -137,7 +137,7 @@ export const LoginPage: React.FC = () => {
             className="mt-4 text-2xl font-bold"
             style={{ color: loginBgUrl ? 'white' : '#0f172a', textShadow: loginBgUrl ? '0 1px 4px rgba(0,0,0,0.4)' : 'none' }}
           >
-            GigaNet Telecom
+            VGWEB Telecom
           </h1>
           <p
             className="text-sm mt-1"
