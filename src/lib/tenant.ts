@@ -3,7 +3,7 @@
  * Coloque em: src/lib/tenant.ts
  *
  * Cada provedor tem seu próprio deploy no Cloudflare Pages com:
- *   VITE_PROVEDOR_ID = giganet
+ *   VITE_PROVEDOR_ID = vgweb
  *
  * Estrutura no Firestore:
  *   provedores/{provedor_id}/settings/profile     → logo, capa, bg login
@@ -19,7 +19,7 @@ import { db } from './firebase';
 
 // ID do provedor — vem da variável de ambiente do deploy
 export const PROVEDOR_ID: string =
-  (import.meta.env.VITE_PROVEDOR_ID as string) || 'giganet';
+  (import.meta.env.VITE_PROVEDOR_ID as string) || 'vgweb';
 
 // ── Coleções ────────────────────────────────────────────────────
 export const Col = {
