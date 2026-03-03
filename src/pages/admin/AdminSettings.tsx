@@ -473,13 +473,13 @@ const TabDispositivos: React.FC = () => {
   };
 
   const toggleAtivo = async (d: DeviceImage) => {
-    await updateDoc(doc(db, 'deviceImages', d.id), { ativo: !d.ativo });
+    await updateDoc(doc(Col.deviceImages(), d.id), { ativo: !d.ativo });
     setDevices(prev => prev.map(x => x.id === d.id ? { ...x, ativo: !x.ativo } : x));
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Remover este dispositivo?')) return;
-    await deleteDoc(doc(db, 'deviceImages', id));
+    await deleteDoc(doc(Col.deviceImages(), id));
     setDevices(prev => prev.filter(x => x.id !== id));
   };
 
@@ -548,7 +548,7 @@ const TabPlanos: React.FC = () => {
   }, []);
 
   const handleUploaded = async (planId: string, url: string) => {
-    await updateDoc(doc(db, 'plans', planId), { imagemUrl: url });
+    await updateDoc(doc(Col.plans(), planId), { imagemUrl: url });
     setPlans(prev => prev.map(p => p.id === planId ? { ...p, imagemUrl: url } : p));
   };
 
@@ -611,13 +611,13 @@ const TabAnuncios: React.FC = () => {
   };
 
   const toggleAtivo = async (a: Announcement) => {
-    await updateDoc(doc(db, 'announcements', a.id), { ativo: !a.ativo });
+    await updateDoc(doc(Col.announcements(), a.id), { ativo: !a.ativo });
     setAnuncios(prev => prev.map(x => x.id === a.id ? { ...x, ativo: !x.ativo } : x));
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Remover este anúncio?')) return;
-    await deleteDoc(doc(db, 'announcements', id));
+    await deleteDoc(doc(Col.announcements(), id));
     setAnuncios(prev => prev.filter(a => a.id !== id));
   };
 
@@ -708,9 +708,9 @@ const TabGeral: React.FC = () => {
       <Card className="space-y-6">
         <h3 className="text-lg font-bold text-slate-900">Informações da Empresa</h3>
         <div className="grid gap-4 md:grid-cols-2">
-          <Input label="Nome Fantasia"     defaultValue="VgWeb Telecom" />
+          <Input label="Nome Fantasia"     defaultValue="GigaNet Telecom" />
           <Input label="CNPJ"              defaultValue="00.000.000/0001-00" />
-          <Input label="E-mail de Contato" defaultValue="contato@vgnet.com.br" />
+          <Input label="E-mail de Contato" defaultValue="contato@giganet.com.br" />
           <Input label="Telefone/WhatsApp" defaultValue="(00) 00000-0000" />
           <Input label="Cidade"            defaultValue="São Paulo" />
           <Input label="Estado"            defaultValue="SP" />
@@ -865,7 +865,7 @@ export const AdminSettings: React.FC = () => {
     <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-bold text-slate-900">Configurações do Sistema</h1>
-        <p className="text-slate-500">Ajuste os parâmetros da VgWeb Telecom</p>
+        <p className="text-slate-500">Ajuste os parâmetros da GigaNet Telecom</p>
       </header>
 
       <div className="grid gap-6 md:grid-cols-3">
