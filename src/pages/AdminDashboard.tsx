@@ -140,9 +140,9 @@ export const AdminDashboard: React.FC = () => {
 
   // Planos de exemplo (em produção viriam do Firestore)
   const plans = [
-    { id: 'plan_500mb', nome: '500MB Giga Fibra',  velocidade: '500MB', valor: 99.90 },
-    { id: 'plan_800mb', nome: '800MB Giga Ultra',  velocidade: '800MB', valor: 129.90 },
-    { id: 'plan_1gb',   nome: '1 Giga Wi-Fi 6',    velocidade: '1GB',   valor: 199.90 },
+    { id: 'plan_500mb', nome: '500MB VG Fibra',  velocidade: '500MB', valor: 99.90 },
+    { id: 'plan_800mb', nome: '800MB VG Ultra',  velocidade: '800MB', valor: 129.90 },
+    { id: 'plan_1gb',   nome: '1 VG Wi-Fi 6',    velocidade: '1GB',   valor: 199.90 },
   ];
 
   const handleImageSaved = (planId: string, url: string) => {
