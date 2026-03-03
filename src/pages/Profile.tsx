@@ -114,7 +114,7 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       <p className="text-center text-[10px] text-slate-400 uppercase tracking-widest pb-2">
-        GigaNet Telecom v1.0.0
+      VGWEB Telecom v1.0.0
       </p>
     </div>
   );
