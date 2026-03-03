@@ -14,12 +14,12 @@ import { getAnalytics } from "firebase/analytics";
  */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDhvezaII8Q77ydkl97ggothgjcwCqVMRQ",
-  authDomain: "giganet-1d32c.firebaseapp.com",
-  projectId: "giganet-1d32c",
-  storageBucket: "giganet-1d32c.firebasestorage.app",
-  messagingSenderId: "56077285821",
-  appId: "1:56077285821:web:fca406a59c0f5138937ad4",
+  apiKey: "AIzaSyDoOG29I0ni48ClBKHJkuqd6vWuslJ85NQ",
+  authDomain: "vgweb-34eec.firebaseapp.com",
+  projectId: "vgweb-34eec",
+  storageBucket: "vgweb-34eec.firebasestorage.app",
+  messagingSenderId: "402905896960",
+  appId: "1:402905896960:web:aeb6f44dc2370ef8fde0e5"
   measurementId: "G-VD522S6N26"
 };
 
