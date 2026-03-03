@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GigaNet Telecom — Apresentação do App</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue:    #004aad;
+    --blue2:   #0062d6;
+    --cyan:    #00b4d8;
+    --light:   #e8f1ff;
+    --dark:    #0a1628;
+    --text:    #1e293b;
+    --muted:   #64748b;
+    --white:   #ffffff;
+    --radius:  18px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f0f4ff;
+    color: var(--text);
+  }
+
+  /* ── SLIDE ── */
+  .slide {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+  }
+
+  /* ── SLIDE 1 — CAPA ── */
+  .slide-1 {
+    background: linear-gradient(135deg, #0a1628 0%, #003a8c 60%, #0062d6 100%);
+    color: white;
+    text-align: center;
+  }
+  .slide-1 .bg-circles {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  }
+  .slide-1 .bg-circles span {
+    position: absolute; border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .slide-1 .bg-circles span:nth-child(1) { width: 600px; height: 600px; top: -200px; right: -150px; }
+  .slide-1 .bg-circles span:nth-child(2) { width: 400px; height: 400px; bottom: -100px; left: -100px; }
+  .slide-1 .bg-circles span:nth-child(3) { width: 200px; height: 200px; top: 40%; left: 20%; background: rgba(0,180,216,0.08); }
+
+ .logo-circle {
+    /* Dobrado de 130px para 260px */
+    width: 260px;
+    height: 260px;
+    
+    border-radius: 50%;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 52px; font-weight: 900; color: var(--blue);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+    margin: 0 auto 28px;
+    letter-spacing: -2px;
+  }
+  .slide-1 h1 {
+    font-size: 52px; font-weight: 900; letter-spacing: -1.5px;
+    line-height: 1.1; margin-bottom: 16px;
+  }
+  .slide-1 h1 span { color: var(--cyan); }
+  .slide-1 .subtitle {
+    font-size: 20px; font-weight: 400; color: rgba(255,255,255,0.75);
+    max-width: 520px; line-height: 1.6; margin-bottom: 40px;
+  }
+  .badge-row {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  }
+  .badge {
+    padding: 8px 20px; border-radius: 99px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    font-size: 13px; font-weight: 600; color: white;
+    backdrop-filter: blur(8px);
+  }
+  .badge.accent { background: var(--cyan); border-color: var(--cyan); color: var(--dark); }
+
+  .slide-1 .footer-tag {
+    position: absolute; bottom: 28px;
+    font-size: 11px; color: rgba(255,255,255,0.35); letter-spacing: 0.1em;
+  }
+
+  /* ── SLIDE 2 — O QUE É ── */
+  .slide-2 { background: white; }
+  .slide-header {
+    text-align: center; margin-bottom: 48px;
+  }
+  .slide-header .tag {
+    display: inline-block;
+    background: var(--light); color: var(--blue);
+    font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 99px; margin-bottom: 14px;
+  }
+  .slide-header h2 {
+    font-size: 38px; font-weight: 800; color: var(--dark); letter-spacing: -1px;
+  }
+  .slide-header h2 span { color: var(--blue); }
+  .slide-header p {
+    font-size: 17px; color: var(--muted); margin-top: 10px; max-width: 560px; margin-inline: auto; line-height: 1.7;
+  }
+
+  .cards-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    width: 100%; max-width: 960px;
+  }
+  .feat-card {
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    background: #f8faff;
+    border: 1.5px solid #e2eaff;
+    transition: transform .2s;
+  }
+  .feat-card:hover { transform: translateY(-4px); }
+  .feat-card .icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 16px;
+  }
+  .feat-card h3 { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+  .feat-card p  { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  .icon-blue   { background: #dbeafe; }
+  .icon-green  { background: #d1fae5; }
+  .icon-violet { background: #ede9fe; }
+  .icon-orange { background: #ffedd5; }
+  .icon-cyan   { background: #cffafe; }
+  .icon-pink   { background: #fce7f3; }
+
+  /* ── SLIDE 3 — FUNCIONALIDADES ── */
+  .slide-3 {
+    background: linear-gradient(160deg, #0a1628 0%, #003a8c 100%);
+    color: white;
+  }
+  .slide-3 .slide-header .tag { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }
+  .slide-3 .slide-header h2   { color: white; }
+  .slide-3 .slide-header p    { color: rgba(255,255,255,0.65); }
+
+  .func-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+    width: 100%; max-width: 820px;
+  }
+  .func-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 20px 22px; border-radius: 14px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .func-item .num {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--cyan); color: var(--dark);
+    font-size: 15px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .func-item h4 { font-size: 15px; font-weight: 700; color: white; margin-bottom: 4px; }
+  .func-item p  { font-size: 13px; color: rgba(255,255,255,0.60); line-height: 1.5; }
+
+  /* ── SLIDE 4 — COMO ACESSAR ── */
+  .slide-4 { background: #f8faff; }
+
+  .steps-row {
+    display: flex; align-items: flex-start; gap: 0;
+    width: 100%; max-width: 860px; position: relative;
+  }
+  .steps-row::before {
+    content: '';
+    position: absolute; top: 30px; left: 80px; right: 80px; height: 2px;
+    background: linear-gradient(to right, var(--blue), var(--cyan));
+    z-index: 0;
+  }
+  .step {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    text-align: center; position: relative; z-index: 1;
+  }
+  .step .circle {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    color: white; font-size: 22px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 20px rgba(0,74,173,0.35);
+    margin-bottom: 16px; border: 3px solid white;
+  }
+  .step h4 { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+  .step p   { font-size: 13px; color: var(--muted); line-height: 1.5; padding: 0 8px; }
+
+  .link-box {
+    margin-top: 48px;
+    padding: 20px 32px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    color: white;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    box-shadow: 0 8px 28px rgba(0,74,173,0.30);
+  }
+  .link-box .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; opacity: .7; }
+  .link-box .url   { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+  .link-box .sub   { font-size: 13px; opacity: .75; }
+
+  /* ── SLIDE 5 — PLANOS ── */
+  .slide-5 { background: white; }
+
+  .plans-row {
+    display: flex; gap: 24px; align-items: stretch;
+    width: 100%; max-width: 860px;
+  }
+  .plan-card {
+    flex: 1; border-radius: var(--radius);
+    padding: 32px 24px; text-align: center;
+    border: 2px solid #e2eaff;
+    position: relative; display: flex; flex-direction: column;
+  }
+  .plan-card.highlight {
+    background: linear-gradient(145deg, #003a8c, #0062d6);
+    border-color: transparent; color: white;
+    transform: scale(1.05);
+    box-shadow: 0 16px 48px rgba(0,74,173,0.35);
+  }
+  .plan-card .badge-top {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--cyan); color: var(--dark);
+    font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em;
+    padding: 4px 14px; border-radius: 99px;
+  }
+  .plan-card .plan-name { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+  .plan-card .plan-speed {
+    font-size: 42px; font-weight: 900; letter-spacing: -2px; color: var(--blue);
+    line-height: 1;
+  }
+  .plan-card.highlight .plan-speed { color: var(--cyan); }
+  .plan-card .plan-unit { font-size: 16px; font-weight: 600; opacity: .7; margin-bottom: 20px; }
+  .plan-card .plan-price { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+  .plan-card .plan-sub   { font-size: 13px; opacity: .6; margin-bottom: 24px; }
+  .plan-card ul { list-style: none; text-align: left; margin-bottom: 24px; flex: 1; }
+  .plan-card ul li {
+    font-size: 13px; padding: 7px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .plan-card.highlight ul li { border-color: rgba(255,255,255,0.12); }
+  .plan-card ul li::before { content: '✓'; font-weight: 700; color: var(--cyan); font-size: 13px; }
+  .plan-card .btn {
+    display: block; padding: 12px;
+    border-radius: 10px; font-size: 14px; font-weight: 700;
+    text-decoration: none; border: none; cursor: pointer;
+    background: var(--light); color: var(--blue);
+  }
+  .plan-card.highlight .btn { background: var(--cyan); color: var(--dark); }
+
+  /* ── SLIDE 6 — ENCERRAMENTO ── */
+  .slide-6 {
+    background: linear-gradient(135deg, #0a1628, #003a8c 50%, #0062d6);
+    color: white; text-align: center;
+  }
+  .slide-6 h2 {
+    font-size: 48px; font-weight: 900; letter-spacing: -1.5px;
+    line-height: 1.15; margin-bottom: 18px;
+  }
+  .slide-6 h2 span { color: var(--cyan); }
+  .slide-6 p {
+    font-size: 18px; color: rgba(255,255,255,0.70);
+    max-width: 480px; line-height: 1.7; margin-bottom: 40px;
+  }
+
+  .contact-row {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+  .contact-item {
+    padding: 14px 28px; border-radius: 12px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.20);
+    font-size: 14px; font-weight: 600;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .contact-item .ic { font-size: 20px; }
+
+  .cta-btn {
+    display: inline-block;
+    padding: 16px 48px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--cyan), #0096c7);
+    color: var(--dark); font-size: 18px; font-weight: 800;
+    text-decoration: none; letter-spacing: -0.3px;
+    box-shadow: 0 8px 32px rgba(0,180,216,0.40);
+  }
+
+  .slide-6 .footer-tag {
+    position: absolute; bottom: 28px;
+    font-size: 11px; color: rgba(255,255,255,0.28); letter-spacing: 0.1em;
+  }
+
+  /* ── SLIDE número badge ── */
+  .slide-num {
+    position: absolute; top: 28px; right: 36px;
+    font-size: 12px; font-weight: 700; opacity: .35; letter-spacing: .05em;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: white; }
+    .slide { page-break-after: always; min-height: 100vh; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ SLIDE 1 — CAPA ══════════════════════════ -->
+<div class="slide slide-1">
+  <div class="bg-circles">
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="logo-circle">®niklaus</div>
+
+  <h1>GigaNet<br><span>Telecom</span></h1>
+  <p class="subtitle">
+    Sua central de atendimento digital.<br>
+    Acesse faturas, suporte e muito mais diretamente do seu celular.
+  </p>
+
+  <div class="badge-row">
+    <span class="badge accent">📱 App Web</span>
+    <span class="badge">✅ Android & iPhone</span>
+    <span class="badge">🔒 Seguro</span>
+    <span class="badge">⚡ Tempo Real</span>
+  </div>
+
+  <div class="footer-tag">Produzido por ®Niklaus &nbsp;|&nbsp; GigaNet Telecom © 2026</div>
+  <div class="slide-num">01 / 06</div>
+</div>
+
+<!-- ══════════════════════════ SLIDE 2 — O QUE É ══════════════════════════ -->
+<div class="slide slide-2">
+  <div class="slide-header">
+    <div class="tag">Sobre o App</div>
+    <h2>Tudo que você precisa,<br><span>em um só lugar</span></h2>
+    <p>O App GigaNet é a sua central digital de relacionamento com a empresa, disponível 24h por dia no seu celular.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="feat-card">
+      <div class="icon icon-blue">💳</div>
+      <h3>Financeiro Completo</h3>
+      <p>Acesse sua fatura, pague com PIX, baixe 2ª via e visualize o histórico de pagamentos.</p>
+    </div>
+    <div class="feat-card">
+      <div class="icon icon-green">📶</div>
+      <h3>Status da Conexão</h3>
+      <p>Veja em tempo real se sua internet está online, offline ou bloqueada.</p>
+    </div>
+    <div class="feat-card">
+      <div class="icon icon-violet">🎧</div>
+      <h3>Suporte Online</h3>
+      <p>Abra chamados, acompanhe ocorrências e fale com nossa equipe de suporte.</p>
+    </div>
+    <div class="feat-card">
+      <div class="icon icon-orange">🔓</div>
+      <h3>Desbloqueio Rápido</h3>
+      <p>Solicite desbloqueio emergencial de confiança direto pelo app, sem ligar.</p>
+    </div>
+    <div class="feat-card">
+      <div class="icon icon-cyan">📦</div>
+      <h3>Meus Planos</h3>
+      <p>Visualize detalhes do seu plano atual, velocidade, data de renovação e muito mais.</p>
+    </div>
+    <div class="feat-card">
+      <div class="icon icon-pink">🔔</div>
+      <h3>Notificações</h3>
+      <p>Receba avisos de vencimento, promoções exclusivas e atualizações do sistema.</p>
+    </div>
+  </div>
+  <div class="slide-num">02 / 06</div>
+</div>
+
+<!-- ══════════════════════════ SLIDE 3 — FUNCIONALIDADES ══════════════════════════ -->
+<div class="slide slide-3">
+  <div class="slide-header">
+    <div class="tag">Funcionalidades</div>
+    <h2>O que você pode fazer<br><span style="color:#00b4d8">no app</span></h2>
+    <p>Recursos pensados para facilitar sua vida como assinante GigaNet.</p>
+  </div>
+
+  <div class="func-grid">
+    <div class="func-item">
+      <div class="num">1</div>
+      <div>
+        <h4>Gerar código PIX</h4>
+        <p>Pague sua fatura instantaneamente com PIX, sem precisar de boleto ou banco.</p>
+      </div>
+    </div>
+    <div class="func-item">
+      <div class="num">2</div>
+      <div>
+        <h4>Download de 2ª via</h4>
+        <p>Baixe faturas anteriores e o comprovante do mês atual com um toque.</p>
+      </div>
+    </div>
+    <div class="func-item">
+      <div class="num">3</div>
+      <div>
+        <h4>Desbloqueio emergencial</h4>
+        <p>Conexão bloqueada? Solicite desbloqueio de confiança por até 48h.</p>
+      </div>
+    </div>
+    <div class="func-item">
+      <div class="num">4</div>
+      <div>
+        <h4>Abertura de chamados</h4>
+        <p>Reportar falhas ou problemas técnicos com acompanhamento do status.</p>
+      </div>
+    </div>
+    <div class="func-item">
+      <div class="num">5</div>
+      <div>
+        <h4>Perfil e dados pessoais</h4>
+        <p>Atualize seus dados de contato, endereço e foto de perfil a qualquer hora.</p>
+      </div>
+    </div>
+    <div class="func-item">
+      <div class="num">6</div>
+      <div>
+        <h4>Programa de indicação</h4>
+        <p>Indique amigos e ganhe descontos na sua próxima fatura automaticamente.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num" style="color:rgba(255,255,255,0.35)">03 / 06</div>
+</div>
+
+<!-- ══════════════════════════ SLIDE 4 — COMO ACESSAR ══════════════════════════ -->
+<div class="slide slide-4">
+  <div class="slide-header">
+    <div class="tag">Acesso</div>
+    <h2>Como acessar<br><span>o App?</span></h2>
+    <p>Em apenas 3 passos simples você já está conectado à sua central GigaNet.</p>
+  </div>
+
+  <div class="steps-row">
+    <div class="step">
+      <div class="circle">1</div>
+      <h4>Abra o link</h4>
+      <p>Acesse o endereço abaixo no navegador do seu celular (Chrome ou Safari).</p>
+    </div>
+    <div class="step">
+      <div class="circle">2</div>
+      <h4>Crie sua conta</h4>
+      <p>Cadastre-se com seu nome, CPF, e-mail e uma senha de sua escolha.</p>
+    </div>
+    <div class="step">
+      <div class="circle">3</div>
+      <h4>Instale na tela inicial</h4>
+      <p>Toque em "Adicionar à tela inicial" para acessar como um app nativo.</p>
+    </div>
+  </div>
+
+  <div class="link-box" style="width:100%; max-width:480px;">
+    <span class="label">🌐 Link de acesso</span>
+    <span class="url">giganet-44p.pages.dev</span>
+    <span class="sub">Disponível 24h · Android e iPhone</span>
+  </div>
+
+  <div class="slide-num">04 / 06</div>
+</div>
+
+<!-- ══════════════════════════ SLIDE 5 — PLANOS ══════════════════════════ -->
+<div class="slide slide-5">
+  <div class="slide-header">
+    <div class="tag">Planos</div>
+    <h2>Escolha o plano<br><span>ideal para você</span></h2>
+    <p>Planos de internet de alta velocidade para a sua casa ou empresa.</p>
+  </div>
+
+  <div class="plans-row">
+    <div class="plan-card">
+      <div class="plan-name">Essencial</div>
+      <div class="plan-speed">100</div>
+      <div class="plan-unit">Mbps</div>
+      <div class="plan-price">R$ 69,90</div>
+      <div class="plan-sub">/mês</div>
+      <ul>
+        <li>Fibra óptica</li>
+        <li>Wi-Fi incluso</li>
+        <li>Suporte 24h</li>
+        <li>Sem fidelidade</li>
+      </ul>
+      <span class="btn">Contratar</span>
+    </div>
+
+    <div class="plan-card highlight">
+      <span class="badge-top">⭐ Mais Vendido</span>
+      <div class="plan-name">Giga Fibra</div>
+      <div class="plan-speed">500</div>
+      <div class="plan-unit">Mbps</div>
+      <div class="plan-price">R$ 99,90</div>
+      <div class="plan-sub">/mês</div>
+      <ul>
+        <li>Fibra óptica</li>
+        <li>Wi-Fi 5GHz incluso</li>
+        <li>Suporte 24h prioritário</li>
+        <li>Sem fidelidade</li>
+      </ul>
+      <span class="btn">Contratar</span>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-name">Ultra</div>
+      <div class="plan-speed">1</div>
+      <div class="plan-unit">Gbps</div>
+      <div class="plan-price">R$ 149,90</div>
+      <div class="plan-sub">/mês</div>
+      <ul>
+        <li>Fibra óptica</li>
+        <li>Wi-Fi 6 incluso</li>
+        <li>Suporte VIP</li>
+        <li>IP fixo incluso</li>
+      </ul>
+      <span class="btn">Contratar</span>
+    </div>
+  </div>
+  <div class="slide-num">05 / 06</div>
+</div>
+
+<!-- ══════════════════════════ SLIDE 6 — ENCERRAMENTO ══════════════════════════ -->
+<div class="slide slide-6">
+  <div class="bg-circles">
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="logo-circle" style="margin-bottom:32px;">®niklaus</div>
+
+  <h2>Conecte-se ao<br><span>futuro digital</span></h2>
+  <p>
+    Acesse agora mesmo e experimente a central do assinante mais moderna da região.
+    Simples, rápida e disponível onde você estiver.
+  </p>
+
+  <div class="contact-row">
+    <div class="contact-item"><span class="ic">🌐</span> giganet-44p.pages.dev</div>
+    <div class="contact-item"><span class="ic">📞</span> (00) 00000-0000</div>
+    <div class="contact-item"><span class="ic">📧</span> contato@giganet.com.br</div>
+  </div>
+
+  <a href="https://giganet-44p.pages.dev" class="cta-btn">Acessar o App Agora →</a>
+
+  <div class="footer-tag">Produzido por ®Niklaus &nbsp;|&nbsp; GigaNet Telecom © 2025</div>
+  <div class="slide-num" style="color:rgba(255,255,255,0.30)">06 / 06</div>
+</div>
+
+</body>
+</html>

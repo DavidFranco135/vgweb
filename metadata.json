@@ -1,0 +1,8 @@
+{
+  "name": "GigaNet Telecom",
+  "description": "Aplicativo completo para provedor de internet com gestão financeira, suporte e status de conexão.",
+  "requestFramePermissions": [
+    "geolocation",
+    "notifications"
+  ]
+}
