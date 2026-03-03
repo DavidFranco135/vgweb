@@ -165,7 +165,7 @@ export const AdminDashboard: React.FC = () => {
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-          <p className="text-slate-500">Visão geral da GigaNet Telecom</p>
+          <p className="text-slate-500">Visão geral da VGWEB Telecom</p>
         </div>
         <div className="flex gap-3">
           <button className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors">Exportar Relatório</button>
