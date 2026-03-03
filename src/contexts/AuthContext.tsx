@@ -1,99 +1,63 @@
 /**
- * AuthContext.tsx
- * Usa onSnapshot para ouvir mudanças em tempo real no Firestore.
- * Assim, quando o server.ts atualiza o statusConexao via IXC/Webhook,
- * o app reflete automaticamente sem precisar recarregar.
+ * AuthContext.tsx — Multi-tenant
+ * Coloque em: src/contexts/AuthContext.tsx
+ * 
+ * Mudança: users/{uid} → provedores/{PROVEDOR_ID}/users/{uid}
  */
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { auth, db } from '../lib/firebase';
-import { UserProfile } from '../types';
+import { getDoc } from 'firebase/firestore';
+import { auth } from '../lib/firebase';
+import { Doc } from '../lib/tenant';
+
+export interface UserProfile {
+  uid:            string;
+  nome:           string;
+  email:          string;
+  cpf:            string;
+  tipo:           'admin' | 'client';
+  fotoUrl?:       string;
+  statusConexao?: string;
+  numeroCliente?: string;
+  telefone?:      string;
+  endereco?:      { rua: string; numero: string; bairro: string; cidade: string; cep: string };
+}
 
 interface AuthContextType {
-  user: User | null;
-  profile: UserProfile | null;
-  loading: boolean;
-  refreshStatus: () => Promise<void>; // força nova consulta ao IXC
+  user:       User | null;
+  profile:    UserProfile | null;
+  loading:    boolean;
+  isAdmin:    boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  user: null,
-  profile: null,
-  loading: true,
-  refreshStatus: async () => {},
+  user: null, profile: null, loading: true, isAdmin: false,
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user,    setUser   ] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Consulta o IXC e atualiza o Firestore (que dispara o onSnapshot abaixo)
-  const refreshStatus = async () => {
-    if (!auth.currentUser) return;
-    try {
-      const token = await auth.currentUser.getIdToken();
-      await fetch('/api/ixc/status', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      // O server.ts atualiza o Firestore, e o onSnapshot cuida do resto
-    } catch (err) {
-      console.warn('[AuthContext] Não foi possível consultar status IXC:', err);
-    }
-  };
-
   useEffect(() => {
-    let unsubscribeSnapshot: (() => void) | null = null;
-
-    const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
-      setLoading(true);
-      setUser(firebaseUser);
-
-      // Remove listener anterior se existir
-      if (unsubscribeSnapshot) {
-        unsubscribeSnapshot();
-        unsubscribeSnapshot = null;
-      }
-
-      if (firebaseUser) {
-        // onSnapshot: escuta mudanças em TEMPO REAL no documento do usuário
-        // Sempre que o backend atualizar statusConexao, o app reflete instantaneamente
-        const docRef = doc(db, 'users', firebaseUser.uid);
-        unsubscribeSnapshot = onSnapshot(
-          docRef,
-          (snap) => {
-            if (snap.exists()) {
-              setProfile(snap.data() as UserProfile);
-            } else {
-              setProfile(null);
-            }
-            setLoading(false);
-          },
-          (error) => {
-            console.error('[AuthContext] Erro no onSnapshot:', error);
-            setProfile(null);
-            setLoading(false);
-          }
-        );
-
-        // Consulta o status IXC ao fazer login
-        setTimeout(() => refreshStatus(), 1500);
+    return onAuthStateChanged(auth, async (u) => {
+      setUser(u);
+      if (u) {
+        try {
+          // ✅ Multi-tenant: busca user dentro do provedor
+          const snap = await getDoc(Doc.user(u.uid));
+          if (snap.exists()) setProfile({ uid: u.uid, ...snap.data() } as UserProfile);
+        } catch { setProfile(null); }
       } else {
         setProfile(null);
-        setLoading(false);
       }
+      setLoading(false);
     });
-
-    return () => {
-      unsubscribeAuth();
-      if (unsubscribeSnapshot) unsubscribeSnapshot();
-    };
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, refreshStatus }}>
+    <AuthContext.Provider value={{ user, profile, loading, isAdmin: profile?.tipo === 'admin' }}>
       {children}
     </AuthContext.Provider>
   );
