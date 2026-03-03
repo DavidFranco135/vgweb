@@ -10,6 +10,7 @@ import {
   doc, setDoc, getDoc,
 } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
+import { Col, Doc } from '../../lib/tenant';
 import { uploadFileToImgBB, fileToBase64 } from '../../lib/imgbbService';
 import { useAuth } from '../../contexts/AuthContext';
 import type { Announcement, DeviceImage, Plan } from '../../types';
@@ -117,7 +118,7 @@ const TabPerfilAdmin: React.FC = () => {
   useEffect(() => {
     if (profile?.fotoUrl) setAvatarPreview(profile.fotoUrl);
     if (!profile?.uid) return;
-    getDoc(doc(db, 'adminSettings', 'profile'))
+    getDoc(Doc.profile())
       .then(snap => {
         if (snap.exists()) {
           const d = snap.data();
@@ -139,8 +140,8 @@ const TabPerfilAdmin: React.FC = () => {
     try {
       const result = await uploadFileToImgBB(file, `admin_avatar_${profile.uid}`);
       setAvatarPreview(result.url);
-      await updateDoc(doc(db, 'users', profile.uid), { fotoUrl: result.url });
-      await setDoc(doc(db, 'adminSettings', 'profile'), { avatarUrl: result.url }, { merge: true });
+      await updateDoc(Doc.user(profile.uid), { fotoUrl: result.url });
+      await setDoc(Doc.profile(), { avatarUrl: result.url }, { merge: true });
       setAvatarSaved(true);
       setTimeout(() => setAvatarSaved(false), 3000);
     } catch (err: any) {
@@ -161,7 +162,7 @@ const TabPerfilAdmin: React.FC = () => {
     try {
       const result = await uploadFileToImgBB(file, `admin_cover_${profile.uid}`);
       setCoverPreview(result.url);
-      await setDoc(doc(db, 'adminSettings', 'profile'), { coverUrl: result.url }, { merge: true });
+      await setDoc(Doc.profile(), { coverUrl: result.url }, { merge: true });
       setCoverSaved(true);
       setTimeout(() => setCoverSaved(false), 3000);
     } catch (err: any) {
@@ -182,7 +183,7 @@ const TabPerfilAdmin: React.FC = () => {
     try {
       const result = await uploadFileToImgBB(file, `login_bg_${profile.uid}`);
       setLoginBgPreview(result.url);
-      await setDoc(doc(db, 'adminSettings', 'profile'), { loginBgUrl: result.url }, { merge: true });
+      await setDoc(Doc.profile(), { loginBgUrl: result.url }, { merge: true });
       setLoginBgSaved(true);
       setTimeout(() => setLoginBgSaved(false), 3000);
     } catch (err: any) {
@@ -451,7 +452,7 @@ const TabDispositivos: React.FC = () => {
   const load = async () => {
     setLoading(true);
     try {
-      const snap = await getDocs(collection(db, 'deviceImages'));
+      const snap = await getDocs(Col.deviceImages());
       const all = snap.docs.map(d => ({ id: d.id, ...d.data() } as DeviceImage));
       all.sort((a, b) => new Date(b.criadoEm).getTime() - new Date(a.criadoEm).getTime());
       setDevices(all);
@@ -465,7 +466,7 @@ const TabDispositivos: React.FC = () => {
     if (!newNome || !newUrl) return;
     setSaving(true);
     try {
-      await addDoc(collection(db, 'deviceImages'), { nome: newNome, descricao: newDesc, imagemUrl: newUrl, ativo: true, criadoEm: new Date().toISOString() });
+      await addDoc(Col.deviceImages(), { nome: newNome, descricao: newDesc, imagemUrl: newUrl, ativo: true, criadoEm: new Date().toISOString() });
       setNewNome(''); setNewDesc(''); setNewUrl('');
       await load();
     } finally { setSaving(false); }
@@ -540,7 +541,7 @@ const TabPlanos: React.FC = () => {
   const [uploadingId, setUploadingId] = useState<string | null>(null);
 
   useEffect(() => {
-    getDocs(collection(db, 'plans'))
+    getDocs(Col.plans())
       .then(snap => setPlans(snap.docs.map(d => ({ id: d.id, ...d.data() } as Plan))))
       .catch(e => console.warn(e))
       .finally(() => setLoading(false));
@@ -589,7 +590,7 @@ const TabAnuncios: React.FC = () => {
   const load = async () => {
     setLoading(true);
     try {
-      const snap = await getDocs(collection(db, 'announcements'));
+      const snap = await getDocs(Col.announcements());
       const all = snap.docs.map(d => ({ id: d.id, ...d.data() } as Announcement));
       all.sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0));
       setAnuncios(all);
@@ -603,7 +604,7 @@ const TabAnuncios: React.FC = () => {
     if (!form.titulo || !form.imagemUrl) return;
     setSaving(true);
     try {
-      await addDoc(collection(db, 'announcements'), { ...form, ativo: true, ordem: anuncios.length, criadoEm: new Date().toISOString() });
+      await addDoc(Col.announcements(), { ...form, ativo: true, ordem: anuncios.length, criadoEm: new Date().toISOString() });
       setForm({ titulo: '', descricao: '', link: '', imagemUrl: '' });
       await load();
     } finally { setSaving(false); }
@@ -707,9 +708,9 @@ const TabGeral: React.FC = () => {
       <Card className="space-y-6">
         <h3 className="text-lg font-bold text-slate-900">Informações da Empresa</h3>
         <div className="grid gap-4 md:grid-cols-2">
-          <Input label="Nome Fantasia"     defaultValue="VGWEB Telecom" />
+          <Input label="Nome Fantasia"     defaultValue="VgWeb Telecom" />
           <Input label="CNPJ"              defaultValue="00.000.000/0001-00" />
-          <Input label="E-mail de Contato" defaultValue="contato@VGWEB.com.br" />
+          <Input label="E-mail de Contato" defaultValue="contato@vgnet.com.br" />
           <Input label="Telefone/WhatsApp" defaultValue="(00) 00000-0000" />
           <Input label="Cidade"            defaultValue="São Paulo" />
           <Input label="Estado"            defaultValue="SP" />
@@ -864,7 +865,7 @@ export const AdminSettings: React.FC = () => {
     <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-bold text-slate-900">Configurações do Sistema</h1>
-        <p className="text-slate-500">Ajuste os parâmetros da VGWEB Telecom</p>
+        <p className="text-slate-500">Ajuste os parâmetros da VgWeb Telecom</p>
       </header>
 
       <div className="grid gap-6 md:grid-cols-3">
