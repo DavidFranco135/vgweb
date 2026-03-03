@@ -38,7 +38,7 @@ export const AdminClients: React.FC = () => {
     <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-bold text-slate-900">Clientes</h1>
-        <p className="text-slate-500">Gerencie a base de assinantes da GigaNet</p>
+        <p className="text-slate-500">Gerencie a base de assinantes da VGWEB</p>
       </header>
 
       <div className="relative">
