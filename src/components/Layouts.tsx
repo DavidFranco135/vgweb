@@ -237,7 +237,7 @@ export const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children
       <Sidebar
         items={navItems}
         logoUrl={logoUrl}
-        title="GigaNet"
+        title="VGWEB"
         onWidthChange={setSidebarW}
       />
       <main
