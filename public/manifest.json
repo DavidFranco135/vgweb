@@ -1,7 +1,7 @@
 {
-  "name": "GigaNet Telecom",
-  "short_name": "GigaNet",
-  "description": "Central do Assinante GigaNet Telecom",
+  "name": "VGWEB Telecom",
+  "short_name": "VGWEB",
+  "description": "Central do Assinante VGWEB Telecom",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
