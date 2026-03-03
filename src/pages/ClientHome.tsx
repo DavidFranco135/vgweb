@@ -46,7 +46,7 @@ const Modal: React.FC<{
 
 const PixModal: React.FC<{ open: boolean; onClose: () => void }> = ({ open, onClose }) => {
   const [copied, setCopied] = useState(false);
-  const pixCode = '00020126360014BR.GOV.BCB.PIX0114+5511999999999520400005303986540599.905802BR5920GigaNet Telecom6009SAO PAULO62070503***6304ABCD';
+  const pixCode = '00020126360014BR.GOV.BCB.PIX0114+5511999999999520400005303986540599.905802BR5920VgWeb Telecom6009SAO PAULO62070503***6304ABCD';
   return (
     <Modal open={open} onClose={onClose} title="Pagar com PIX">
       <div className="space-y-5">
@@ -56,7 +56,7 @@ const PixModal: React.FC<{ open: boolean; onClose: () => void }> = ({ open, onCl
           <p className="text-xs text-slate-400 mt-1">Vencimento: 10/03/2024</p>
         </div>
         <div className="flex justify-center">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PIX_GIGANET_99.90" alt="QR Code" className="h-48 w-48 rounded-xl border border-slate-200" />
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PIX_VGWEB_99.90" alt="QR Code" className="h-48 w-48 rounded-xl border border-slate-200" />
         </div>
         <div className="p-3 bg-slate-100 rounded-xl text-[10px] text-slate-600 break-all font-mono">{pixCode}</div>
         <Button onClick={() => { navigator.clipboard.writeText(pixCode); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
@@ -346,7 +346,7 @@ const CoverBanner: React.FC = () => {
     }}>
       <img
         src={coverUrl}
-        alt="Capa GigaNet"
+        alt="Capa VgWeb"
         style={{
           width: '100%',
           maxHeight: '200px',
@@ -522,7 +522,7 @@ export const ClientHome: React.FC = () => {
             </div>
             <div className="space-y-1">
               <p className="text-3xl font-bold text-slate-900">500MB</p>
-              <p className="text-slate-500">Plano Giga Fibra</p>
+              <p className="text-slate-500">Plano VG Fibra</p>
             </div>
             <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between text-sm">
               <span className="text-slate-500">IP: 187.45.122.10</span>
