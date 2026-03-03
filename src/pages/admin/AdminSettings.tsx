@@ -708,9 +708,9 @@ const TabGeral: React.FC = () => {
       <Card className="space-y-6">
         <h3 className="text-lg font-bold text-slate-900">Informações da Empresa</h3>
         <div className="grid gap-4 md:grid-cols-2">
-          <Input label="Nome Fantasia"     defaultValue="GigaNet Telecom" />
+          <Input label="Nome Fantasia"     defaultValue="VgWeb Telecom" />
           <Input label="CNPJ"              defaultValue="00.000.000/0001-00" />
-          <Input label="E-mail de Contato" defaultValue="contato@giganet.com.br" />
+          <Input label="E-mail de Contato" defaultValue="contato@VgWeb.com.br" />
           <Input label="Telefone/WhatsApp" defaultValue="(00) 00000-0000" />
           <Input label="Cidade"            defaultValue="São Paulo" />
           <Input label="Estado"            defaultValue="SP" />
@@ -865,7 +865,7 @@ export const AdminSettings: React.FC = () => {
     <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-bold text-slate-900">Configurações do Sistema</h1>
-        <p className="text-slate-500">Ajuste os parâmetros da GigaNet Telecom</p>
+        <p className="text-slate-500">Ajuste os parâmetros da VgWeb Telecom</p>
       </header>
 
       <div className="grid gap-6 md:grid-cols-3">
