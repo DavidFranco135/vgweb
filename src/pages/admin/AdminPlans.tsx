@@ -197,7 +197,7 @@ export const AdminPlans: React.FC = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4 pb-2">
-              <Input label="Nome do Plano" value={nome} onChange={e => setNome(e.target.value)} placeholder="Ex: Giga Fibra 500MB" required />
+              <Input label="Nome do Plano" value={nome} onChange={e => setNome(e.target.value)} placeholder="Ex: VG Fibra 500MB" required />
               <div className="grid grid-cols-2 gap-3">
                 <Input label="Velocidade" value={velocidade} onChange={e => setVelocidade(e.target.value)} placeholder="500MB" required />
                 <Input label="Valor (R$)" type="number" step="0.01" value={valor} onChange={e => setValor(e.target.value)} placeholder="99.90" required />
