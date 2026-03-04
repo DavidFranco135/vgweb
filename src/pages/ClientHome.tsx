@@ -144,15 +144,15 @@ const AnnouncementGallery: React.FC = () => {
   if (items.length === 0) return null;  // some silenciosamente se não há anúncios
 
   const item = items[current];
+  const [imgLoaded, setImgLoaded] = useState(false);
+  useEffect(() => { setImgLoaded(false); }, [current]);
 
   return (
     <div
       className="relative overflow-hidden rounded-2xl shadow-md select-none"
-      // Arrastar com mouse
       onMouseDown={e  => onDragStart(e.clientX)}
       onMouseUp={e    => onDragEnd(e.clientX)}
       onMouseLeave={() => { dragStart.current = null; }}
-      // Swipe touch
       onTouchStart={e => onDragStart(e.touches[0].clientX)}
       onTouchEnd={e   => onDragEnd(e.changedTouches[0].clientX)}
     >
@@ -165,17 +165,25 @@ const AnnouncementGallery: React.FC = () => {
           transition={{ duration: 0.3 }}
           style={{ position: 'relative' }}
         >
-          {/* ── Imagem inteira (object-contain) ── */}
-          <div style={{ width: '100%', backgroundColor: '#0a0a0a' }}>
+          <div style={{ width: '100%', backgroundColor: '#0a0a0a', minHeight: '220px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {!imgLoaded && (
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 32, height: 32, borderRadius: '50%', border: '3px solid rgba(255,255,255,0.15)', borderTopColor: 'rgba(255,255,255,0.6)', animation: 'spin 0.8s linear infinite' }} />
+                <style>{'@keyframes spin{to{transform:rotate(360deg)}}'}</style>
+              </div>
+            )}
             <img
               src={item.imagemUrl}
               alt={item.titulo}
               draggable={false}
+              onLoad={() => setImgLoaded(true)}
               style={{
                 width:      '100%',
                 display:    'block',
-                objectFit:  'contain',       // imagem completa, sem corte
-                maxHeight:  '420px',         // limite razoável em telas grandes
+                objectFit:  'contain',
+                maxHeight:  '420px',
+                opacity:    imgLoaded ? 1 : 0,
+                transition: 'opacity 0.3s ease',
               }}
             />
           </div>
