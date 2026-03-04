@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { getDocs } from 'firebase/firestore';
+import { Col } from '../lib/tenant';
 import { Card, Button, cn } from '../components/UI';
 import { Check, Wifi, Zap, Shield, Headphones } from 'lucide-react';
 import { Plan } from '../types';
@@ -15,7 +15,7 @@ export const PlansPage: React.FC = () => {
   const fetchPlans = async () => {
     setLoading(true);
     try {
-      const snap = await getDocs(collection(db, 'plans'));
+      const snap = await getDocs(Col.plans());
       setPlans(snap.docs.map(d => ({ id: d.id, ...d.data() } as Plan)));
     } catch (error) {
       console.error('Erro ao buscar planos:', error);
@@ -31,7 +31,7 @@ export const PlansPage: React.FC = () => {
     <div className="space-y-8">
       <header className="text-center max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold text-slate-900">Nossos Planos</h1>
-        <p className="text-slate-500 mt-2">Escolha a velocidade ideal para sua casa ou empresa com a ultravelocidade da VGWEB.</p>
+        <p className="text-slate-500 mt-2">Escolha a velocidade ideal para sua casa ou empresa com a ultravelocidade da VgWeb.</p>
       </header>
 
       {loading ? (
@@ -57,16 +57,30 @@ export const PlansPage: React.FC = () => {
                   </div>
                 )}
 
-                <div className="h-48 bg-slate-100 relative">
+                {/* ── Imagem inteira (object-contain, fundo escuro) ── */}
+                <div style={{
+                  width: '100%',
+                  backgroundColor: '#f1f5f9',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: '180px',
+                }}>
                   {getImage(plan) ? (
                     <img
                       src={getImage(plan)}
                       alt={plan.nome}
-                      className="h-full w-full object-cover"
                       referrerPolicy="no-referrer"
+                      style={{
+                        width:      '100%',
+                        display:    'block',
+                        objectFit:  'contain',   // imagem completa, sem corte
+                        maxHeight:  '260px',
+                      }}
                     />
                   ) : (
-                    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
+                    <div style={{ height: '180px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      className="bg-gradient-to-br from-primary/20 to-primary/5">
                       <Wifi className="h-12 w-12 text-primary/30" />
                     </div>
                   )}
