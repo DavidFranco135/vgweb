@@ -1,14 +1,13 @@
 /**
- * AuthContext.tsx — Multi-tenant
+ * AuthContext.tsx — Multi-tenant + FCM token automático
  * Coloque em: src/contexts/AuthContext.tsx
- * 
- * Mudança: users/{uid} → provedores/{PROVEDOR_ID}/users/{uid}
  */
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { getDoc } from 'firebase/firestore';
+import { getDoc, updateDoc } from 'firebase/firestore';
 import { auth } from '../lib/firebase';
+import { requestFCMToken } from '../lib/firebase';
 import { Doc } from '../lib/tenant';
 
 export interface UserProfile {
@@ -21,14 +20,16 @@ export interface UserProfile {
   statusConexao?: string;
   numeroCliente?: string;
   telefone?:      string;
+  fcmToken?:      string;
+  bairro?:        string;
   endereco?:      { rua: string; numero: string; bairro: string; cidade: string; cep: string };
 }
 
 interface AuthContextType {
-  user:       User | null;
-  profile:    UserProfile | null;
-  loading:    boolean;
-  isAdmin:    boolean;
+  user:    User | null;
+  profile: UserProfile | null;
+  loading: boolean;
+  isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -45,10 +46,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(u);
       if (u) {
         try {
-          // ✅ Multi-tenant: busca user dentro do provedor
           const snap = await getDoc(Doc.user(u.uid));
-          if (snap.exists()) setProfile({ uid: u.uid, ...snap.data() } as UserProfile);
-        } catch { setProfile(null); }
+          if (snap.exists()) {
+            const profileData = { uid: u.uid, ...snap.data() } as UserProfile;
+            setProfile(profileData);
+
+            // ── Registra FCM token automaticamente após login ──
+            // Só para clientes (admin não precisa receber push)
+            if (profileData.tipo === 'client') {
+              registerFCMToken(u.uid);
+            }
+          }
+        } catch {
+          setProfile(null);
+        }
       } else {
         setProfile(null);
       }
@@ -62,5 +73,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     </AuthContext.Provider>
   );
 };
+
+// ── Registra/atualiza FCM token no servidor ─────────────────────
+async function registerFCMToken(uid: string) {
+  try {
+    const token = await requestFCMToken();
+    if (!token) return;
+
+    // Salva no servidor (server.ts route POST /api/fcm/token)
+    const idToken = await auth.currentUser?.getIdToken();
+    if (!idToken) return;
+
+    await fetch('/api/fcm/token', {
+      method:  'POST',
+      headers: {
+        'Authorization': `Bearer ${idToken}`,
+        'Content-Type':  'application/json',
+      },
+      body: JSON.stringify({ token }),
+    });
+  } catch (err) {
+    // Silencioso — não bloqueia o login
+    console.warn('[FCM] Falha ao registrar token:', err);
+  }
+}
 
 export const useAuth = () => useContext(AuthContext);
