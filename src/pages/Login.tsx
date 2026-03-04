@@ -20,8 +20,8 @@ import { AvatarCircle } from '../components/AvatarCircle';
 //  Para que o mesmo e-mail possa ser usado em provedores diferentes,
 //  armazenamos no Auth um e-mail interno com sufixo do provedor:
 //
-//    "joao@gmail.com"  (provedor "giganet")
-//    →  Auth email: "joao@gmail.com+giganet"
+//    "joao@gmail.com"  (provedor "VgWeb")
+//    →  Auth email: "joao@gmail.com+VgWebnet"
 //
 //  O e-mail real (sem sufixo) é guardado no Firestore, campo "email".
 //  Na tela o usuário digita sempre o e-mail real; a conversão é transparente.
@@ -95,7 +95,7 @@ export const LoginPage: React.FC = () => {
 
       if (isRegistering) {
         const cred    = await createUserWithEmailAndPassword(auth, authEmail, password);
-        const isAdmin = email.toLowerCase() === (import.meta.env.VITE_ADMIN_EMAIL ?? 'giganetadm@gmail.com').toLowerCase();
+        const isAdmin = email.toLowerCase() === (import.meta.env.VITE_ADMIN_EMAIL ?? 'vgwebadm@gmail.com').toLowerCase();
         await setDoc(Doc.user(cred.user.uid), {
           uid:            cred.user.uid,
           nome,
@@ -184,7 +184,7 @@ export const LoginPage: React.FC = () => {
             className="mt-4 text-2xl font-bold"
             style={{ color: loginBgUrl ? 'white' : '#0f172a', textShadow: loginBgUrl ? '0 1px 4px rgba(0,0,0,0.4)' : 'none' }}
           >
-            GigaNet Telecom
+            VgWeb Telecom
           </h1>
           <p
             className="text-sm mt-1"
