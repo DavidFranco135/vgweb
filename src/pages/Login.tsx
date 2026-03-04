@@ -1,13 +1,40 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
+} from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
-import { Doc } from '../lib/tenant';
+import { Doc, PROVEDOR_ID } from '../lib/tenant';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { Button, Input, Card } from '../components/UI';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
 import { uploadFileToImgBB, fileToBase64 } from '../lib/imgbbService';
 import { AvatarCircle } from '../components/AvatarCircle';
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  Helpers: email ↔ Auth
+//
+//  O Firebase Auth é GLOBAL (não isolado por provedor).
+//  Para que o mesmo e-mail possa ser usado em provedores diferentes,
+//  armazenamos no Auth um e-mail interno com sufixo do provedor:
+//
+//    "joao@gmail.com"  (provedor "vgweb")
+//    →  Auth email: "joao@gmail.com+vgweb"
+//
+//  O e-mail real (sem sufixo) é guardado no Firestore, campo "email".
+//  Na tela o usuário digita sempre o e-mail real; a conversão é transparente.
+// ─────────────────────────────────────────────────────────────────────────────
+function toAuthEmail(realEmail: string): string {
+  // Remove qualquer sufixo anterior para ser idempotente
+  const base = realEmail.toLowerCase().trim();
+  // Se já tem o sufixo deste provedor não duplica
+  const suffix = `+${PROVEDOR_ID}`;
+  if (base.endsWith(suffix)) return base;
+  const [local, domain] = base.split('@');
+  return `${local}${suffix}@${domain}`;
+}
 
 export const LoginPage: React.FC = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -27,7 +54,7 @@ export const LoginPage: React.FC = () => {
   const [avStatus,    setAvStatus   ]     = useState<'idle'|'ok'|'error'>('idle');
 
   // logo do admin + plano de fundo do login
-  const [logoUrl,   setLogoUrl  ] = useState('');
+  const [logoUrl,    setLogoUrl   ] = useState('');
   const [loginBgUrl, setLoginBgUrl] = useState('');
   useEffect(() => {
     getDoc(Doc.profile())
@@ -63,27 +90,36 @@ export const LoginPage: React.FC = () => {
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault(); setLoading(true); setError('');
     try {
+      // E-mail interno do Auth (com sufixo do provedor)
+      const authEmail = toAuthEmail(email);
+
       if (isRegistering) {
-        const cred    = await createUserWithEmailAndPassword(auth, email, password);
-        const isAdmin = email === 'vgwebadm@gmail.com';
+        const cred    = await createUserWithEmailAndPassword(auth, authEmail, password);
+        const isAdmin = email.toLowerCase() === (import.meta.env.VITE_ADMIN_EMAIL ?? 'vgwebadm@gmail.com').toLowerCase();
         await setDoc(Doc.user(cred.user.uid), {
-          uid: cred.user.uid, nome, email, cpf,
-          tipo: isAdmin ? 'admin' : 'client',
-          statusConexao: 'offline',
-          numeroCliente: Math.floor(100000 + Math.random() * 900000).toString(),
-          telefone: '',
-          fotoUrl: avatarUrl || null,
-          endereco: { rua: '', numero: '', bairro: '', cidade: '', cep: '' },
+          uid:            cred.user.uid,
+          nome,
+          email,          // e-mail real (sem sufixo) — exibido no app
+          cpf,
+          tipo:           isAdmin ? 'admin' : 'client',
+          statusConexao:  'offline',
+          numeroCliente:  Math.floor(100000 + Math.random() * 900000).toString(),
+          telefone:       '',
+          fotoUrl:        avatarUrl || null,
+          provedor:       PROVEDOR_ID,
+          endereco:       { rua: '', numero: '', bairro: '', cidade: '', cep: '' },
         });
         navigate(isAdmin ? '/admin' : '/');
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(auth, authEmail, password);
         navigate('/');
       }
     } catch (err: any) {
-      if      (err.code === 'auth/email-already-in-use') setError('Este e-mail já está em uso.');
+      if      (err.code === 'auth/email-already-in-use') setError('Este e-mail já está em uso neste provedor.');
       else if (err.code === 'auth/weak-password')         setError('Senha deve ter pelo menos 6 caracteres.');
-      else if (err.code === 'auth/invalid-credential')    setError('E-mail ou senha incorretos.');
+      else if (err.code === 'auth/invalid-credential' ||
+               err.code === 'auth/user-not-found' ||
+               err.code === 'auth/wrong-password')        setError('E-mail ou senha incorretos.');
       else                                                setError('Erro na autenticação. Verifique seus dados.');
     } finally { setLoading(false); }
   };
