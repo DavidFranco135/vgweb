@@ -27,7 +27,7 @@ messaging.onBackgroundMessage((payload) => {
 
   const { title, body, icon, badge, data } = payload.notification ?? {};
 
-  self.registration.showNotification(title || 'GigaNet Telecom', {
+  self.registration.showNotification(title || 'VgWeb Telecom', {
     body:    body    || '',
     icon:    icon    || '/icon-192.png',
     badge:   badge   || '/favicon-32.png',
