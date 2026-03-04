@@ -1,3 +1,6 @@
+// firestore.rules — Multi-tenant GigaNet
+// Cole no Firebase Console → Firestore → Rules
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
