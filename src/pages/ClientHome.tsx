@@ -93,29 +93,43 @@ const DesbloqueioModal: React.FC<{ open: boolean; onClose: () => void }> = ({ op
   );
 };
 
+// ── Pré-carrega imagens na memória do browser ───────────────────
+function preloadImages(urls: string[]): Promise<void[]> {
+  return Promise.all(
+    urls.map(url => new Promise<void>(resolve => {
+      const img = new Image();
+      img.onload  = () => resolve();
+      img.onerror = () => resolve(); // resolve mesmo se falhar
+      img.src = url;
+    }))
+  );
+}
+
 // ── Galeria de Anúncios — slide com imagem inteira ──────────────
 const AnnouncementGallery: React.FC = () => {
-  const [items, setItems]     = useState<Announcement[]>([]);
+  const [items,   setItems  ] = useState<Announcement[]>([]);
   const [current, setCurrent] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Suporte a arrastar/swipe
+  const [ready,   setReady  ] = useState(false); // true só após todas imagens carregadas
+  const timerRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragStart = useRef<number | null>(null);
 
   useEffect(() => {
     (async () => {
       try {
-        const colRef = Col.announcements();
-        const snap   = await getDocs(colRef);
-        const all    = snap.docs.map(d => ({ id: d.id, ...d.data() } as Announcement));
-        const ativos = all
+        const snap   = await getDocs(Col.announcements());
+        const ativos = snap.docs
+          .map(d => ({ id: d.id, ...d.data() } as Announcement))
           .filter(a => a.ativo === true)
           .sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0));
+
+        // Pré-carrega TODAS as imagens antes de exibir qualquer slide
+        await preloadImages(ativos.map(a => a.imagemUrl).filter(Boolean));
         setItems(ativos);
       } catch (e) {
         console.error('[Anúncios] ERRO:', e);
-      } finally { setLoading(false); }
+      } finally {
+        setReady(true);
+      }
     })();
   }, []);
 
@@ -131,7 +145,6 @@ const AnnouncementGallery: React.FC = () => {
     setCurrent(c => (c + dir + items.length) % items.length);
   };
 
-  // Handlers de arrastar (mouse + touch)
   const onDragStart = (clientX: number) => { dragStart.current = clientX; };
   const onDragEnd   = (clientX: number) => {
     if (dragStart.current === null) return;
@@ -140,12 +153,11 @@ const AnnouncementGallery: React.FC = () => {
     dragStart.current = null;
   };
 
-  if (loading) return <div className="rounded-2xl bg-slate-100 animate-pulse" style={{ height: 220 }} />;
-  if (items.length === 0) return null;  // some silenciosamente se não há anúncios
+  // Skeleton enquanto carrega
+  if (!ready) return <div className="rounded-2xl bg-slate-100 animate-pulse" style={{ height: 220 }} />;
+  if (items.length === 0) return null;
 
   const item = items[current];
-  const [imgLoaded, setImgLoaded] = useState(false);
-  useEffect(() => { setImgLoaded(false); }, [current]);
 
   return (
     <div
@@ -165,25 +177,16 @@ const AnnouncementGallery: React.FC = () => {
           transition={{ duration: 0.3 }}
           style={{ position: 'relative' }}
         >
-          <div style={{ width: '100%', backgroundColor: '#0a0a0a', minHeight: '220px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {!imgLoaded && (
-              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ width: 32, height: 32, borderRadius: '50%', border: '3px solid rgba(255,255,255,0.15)', borderTopColor: 'rgba(255,255,255,0.6)', animation: 'spin 0.8s linear infinite' }} />
-                <style>{'@keyframes spin{to{transform:rotate(360deg)}}'}</style>
-              </div>
-            )}
+          <div style={{ width: '100%', backgroundColor: '#0a0a0a', minHeight: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <img
               src={item.imagemUrl}
               alt={item.titulo}
               draggable={false}
-              onLoad={() => setImgLoaded(true)}
               style={{
-                width:      '100%',
-                display:    'block',
-                objectFit:  'contain',
-                maxHeight:  '420px',
-                opacity:    imgLoaded ? 1 : 0,
-                transition: 'opacity 0.3s ease',
+                width:     '100%',
+                display:   'block',
+                objectFit: 'contain',
+                maxHeight: '420px',
               }}
             />
           </div>
@@ -351,7 +354,7 @@ export const ClientHome: React.FC = () => {
             </div>
             <div className="space-y-1">
               <p className="text-3xl font-bold text-slate-900">500MB</p>
-              <p className="text-slate-500">Plano VG Fibra</p>
+              <p className="text-slate-500">Plano Vg Fibra</p>
             </div>
             <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between text-sm">
               <span className="text-slate-500">IP: 187.45.122.10</span>
