@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../lib/firebase';
+import { addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { Col } from '../../lib/tenant';
 import { Card, Button, Input, cn } from '../../components/UI';
 import { Plus, Trash2, Edit2, X, Check, Upload, Loader2, ImageIcon } from 'lucide-react';
 import { Plan } from '../../types';
@@ -46,7 +46,7 @@ const ImgUpload: React.FC<{ currentUrl?: string; onUploaded: (url: string) => vo
       >
         {preview ? (
           <>
-            <img src={preview} alt="" className="h-full w-full object-cover" />
+            <img src={preview} alt="" className="h-full w-full object-contain" />
             <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
               <span className="text-white text-xs font-medium flex items-center gap-1.5"><Upload className="h-3.5 w-3.5" /> Trocar</span>
             </div>
@@ -84,7 +84,8 @@ export const AdminPlans: React.FC = () => {
   const fetchPlans = async () => {
     setLoading(true);
     try {
-      const snap = await getDocs(collection(db, 'plans'));
+      // ✅ Multi-tenant: lê de provedores/{PROVEDOR_ID}/plans
+      const snap = await getDocs(Col.plans());
       setPlans(snap.docs.map(d => ({ id: d.id, ...d.data() } as Plan)));
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
@@ -101,8 +102,13 @@ export const AdminPlans: React.FC = () => {
         beneficios: beneficios.split(',').map(b => b.trim()).filter(Boolean),
         popular, imagemUrl,
       };
-      if (editing) await updateDoc(doc(db, 'plans', editing.id), data);
-      else         await addDoc(collection(db, 'plans'), data);
+      if (editing) {
+        // ✅ Edita dentro do provedor
+        await updateDoc(doc(Col.plans(), editing.id), data);
+      } else {
+        // ✅ Cria dentro do provedor
+        await addDoc(Col.plans(), data);
+      }
       resetForm(); await fetchPlans();
     } catch (e) { console.error(e); }
     finally { setSaving(false); }
@@ -123,8 +129,11 @@ export const AdminPlans: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     if (!window.confirm('Excluir este plano?')) return;
-    try { await deleteDoc(doc(db, 'plans', id)); await fetchPlans(); }
-    catch (e) { console.error(e); }
+    try {
+      // ✅ Deleta dentro do provedor
+      await deleteDoc(doc(Col.plans(), id));
+      await fetchPlans();
+    } catch (e) { console.error(e); }
   };
 
   return (
@@ -150,10 +159,18 @@ export const AdminPlans: React.FC = () => {
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {plans.map(plan => (
             <Card key={plan.id} className="overflow-hidden p-0 flex flex-col">
-              <div className="h-36 bg-slate-100 relative flex-shrink-0">
+              <div className="relative flex-shrink-0 bg-slate-50" style={{ minHeight: '144px' }}>
                 {plan.imagemUrl
-                  ? <img src={plan.imagemUrl} alt={plan.nome} className="h-full w-full object-cover" referrerPolicy="no-referrer" />
-                  : <div className="h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5"><ImageIcon className="h-10 w-10 text-primary/30" /></div>
+                  ? <img
+                      src={plan.imagemUrl}
+                      alt={plan.nome}
+                      className="w-full object-contain"
+                      style={{ maxHeight: '180px', display: 'block' }}
+                      referrerPolicy="no-referrer"
+                    />
+                  : <div className="h-36 flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
+                      <ImageIcon className="h-10 w-10 text-primary/30" />
+                    </div>
                 }
                 {plan.popular && (
                   <div className="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded-full">Mais Popular</div>
