@@ -179,7 +179,7 @@ export const LoginPage: React.FC = () => {
 
         {/* ═══ Logo ═══ */}
         <div className="flex flex-col items-center mb-6">
-         <AvatarCircle src={logoUrl} size={176} shadow="0 8px 24px rgba(0,0,0,0.4)" />
+         <AvatarCircle src={logoUrl} size={176} shadow="none" />
           <h1
             className="mt-4 text-2xl font-bold"
             style={{ color: loginBgUrl ? 'white' : '#0f172a', textShadow: loginBgUrl ? '0 1px 4px rgba(0,0,0,0.4)' : 'none' }}
