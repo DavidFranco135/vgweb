@@ -14,6 +14,7 @@ import { AdminInvoices } from './pages/admin/AdminInvoices';
 import { AdminTickets } from './pages/admin/AdminTickets';
 import { AdminPlans } from './pages/admin/AdminPlans';
 import { AdminSettings } from './pages/admin/AdminSettings';
+import { AdminNotificacoes } from './pages/admin/AdminNotificacoes';
 import { PlansPage } from './pages/Plans';
 
 const ProtectedRoute = ({ children, role }: { children: React.ReactNode; role?: 'client' | 'admin' }) => {
@@ -27,13 +28,12 @@ const ProtectedRoute = ({ children, role }: { children: React.ReactNode; role?: 
 
   if (!user) return <Navigate to="/login" />;
 
-  // Se o usuário está logado mas o perfil ainda não existe no Firestore
   if (!profile) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-4 text-center">
         <h2 className="text-xl font-bold text-slate-900 mb-2">Perfil não encontrado</h2>
-        <p className="text-slate-500 mb-6">Não conseguimos carregar seus dados de acesso. Tente sair e entrar novamente.</p>
-        <button 
+        <p className="text-slate-500 mb-6">Não conseguimos carregar seus dados. Tente sair e entrar novamente.</p>
+        <button
           onClick={() => auth.signOut()}
           className="px-6 py-2 bg-primary text-white rounded-xl font-medium"
         >
@@ -56,8 +56,8 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          
-          {/* Client Routes */}
+
+          {/* ── Rotas do Cliente ── */}
           <Route path="/" element={
             <ProtectedRoute role="client">
               <ClientLayout><ClientHome /></ClientLayout>
@@ -78,8 +78,13 @@ export default function App() {
               <ClientLayout><ProfilePage /></ClientLayout>
             </ProtectedRoute>
           } />
+          <Route path="/plans" element={
+            <ProtectedRoute role="client">
+              <ClientLayout><PlansPage /></ClientLayout>
+            </ProtectedRoute>
+          } />
 
-          {/* Admin Routes */}
+          {/* ── Rotas do Admin ── */}
           <Route path="/admin" element={
             <ProtectedRoute role="admin">
               <AdminLayout><AdminDashboard /></AdminLayout>
@@ -110,14 +115,12 @@ export default function App() {
               <AdminLayout><AdminSettings /></AdminLayout>
             </ProtectedRoute>
           } />
-
-          {/* Client Plans Gallery */}
-          <Route path="/plans" element={
-            <ProtectedRoute role="client">
-              <ClientLayout><PlansPage /></ClientLayout>
+          <Route path="/admin/notificacoes" element={
+            <ProtectedRoute role="admin">
+              <AdminLayout><AdminNotificacoes /></AdminLayout>
             </ProtectedRoute>
           } />
-          
+
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
